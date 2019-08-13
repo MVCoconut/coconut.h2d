@@ -1,0 +1,7 @@
+-cp tests
+-main Playground
+-js bin/index.js
+--macro Macro.check()
+-lib coconut.haxeui
+-lib haxeui-html5
+-dce full

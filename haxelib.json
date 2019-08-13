@@ -1,0 +1,18 @@
+{
+  "name": "coconut.h2d",
+  "license": "MIT",
+  "tags": [
+    "coconut",
+    "haxeui"
+  ],
+  "classPath": "src",
+  "contributors": [
+    "kevinresol"
+  ],
+  "releasenote": "initial release",
+  "version": "0.0.0",
+  "dependencies": {
+    "haxeui-core": "gh:heapsio/heaps",
+    "coconut.diffing": "gh:MVCoconut/coconut.diffing"
+  }
+}

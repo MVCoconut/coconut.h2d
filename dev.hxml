@@ -1,0 +1,6 @@
+-D no-deprecation-warnings
+-lib coconut.h2d
+-js bin/index.js
+-cp tests
+--main Playground
+coconut.ui.Renderer
