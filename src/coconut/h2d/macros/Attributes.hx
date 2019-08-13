@@ -1,4 +1,4 @@
-package coconut.haxeui.macros;
+package coconut.h2d.macros;
 
 #if macro
 import haxe.macro.Type;
@@ -7,18 +7,25 @@ import haxe.macro.Expr;
 using haxe.macro.Tools;
 using tink.MacroApi;
 #else
-@:genericBuild(coconut.haxeui.macros.Attributes.build())
+@:genericBuild(coconut.h2d.macros.Attributes.build())
 #end
 class Attributes<T> {
   #if macro
   static function build() 
-    return tink.macro.BuildCache.getType('coconut.haxeui.macros.Attributes', function (ctx) {
+    return tink.macro.BuildCache.getType('coconut.h2d.macros.Attributes', function (ctx) {
       var fields:Array<Field> = [];
 
       function crawl(target:ClassType) {
         for (f in target.fields.get())
           switch f.kind {
-            case FVar(AccCall, AccCall):
+            case FFun(MethDynamic):
+              fields.push({
+                name: f.name,
+                pos: f.pos,
+                kind: FProp('default', 'never', f.type.toComplex()),//TODO: make this a callback
+                meta: [{ name: ':optional', params: [], pos: f.pos }],
+              });
+            case FVar(_, AccCall):
               fields.push({
                 name: f.name,
                 pos: f.pos,
@@ -38,7 +45,8 @@ class Attributes<T> {
         pack: [],
         pos: ctx.pos,
         fields: fields,
-        kind: TDAlias(TExtend(['coconut.haxeui.Events'.asTypePath([TPType(ctx.type.toComplex())])], fields))
+        kind: TDAlias(TAnonymous(fields))
+        //TDAlias(TExtend(['coconut.h2d.Events'.asTypePath([TPType(ctx.type.toComplex())])], fields))
       }
 
     });
