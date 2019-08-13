@@ -2,4 +2,5 @@
 -lib coconut.h2d
 -js bin/index.js
 -cp tests
+-dce full
 --main Playground

@@ -16,6 +16,8 @@ class Attributes<T> {
       var fields:Array<Field> = [],
           added = new Map();
 
+      var cl:ClassType = ctx.type.getClass();
+
       function addField(name, pos, type:Type, ?mandatory)
         if (!added[name]) {
           added[name] = true;
@@ -27,7 +29,7 @@ class Attributes<T> {
           });              
         }
       function crawl(target:ClassType) {
-        for (f in target.fields.get()) {
+        for (f in target.fields.get()) if (f.isPublic) {
 
           function add(?t)
             if (t == null) add(f.type)
@@ -36,7 +38,7 @@ class Attributes<T> {
           switch f.kind {
             case FMethod(MethDynamic):
               add();//TODO: make this a callback
-            case FVar(_, AccCall):
+            case FVar(_, AccCall | AccNormal):
               add();
             default:
           }
@@ -44,8 +46,6 @@ class Attributes<T> {
         if (target.superClass != null)
           crawl(target.superClass.t.get());//TODO: do something about params
       }
-
-      var cl:ClassType = ctx.type.getClass();
         
       switch cl.constructor.get().type.reduce() {
         case TFun(args, _):

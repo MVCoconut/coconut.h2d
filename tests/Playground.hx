@@ -1,6 +1,6 @@
 package;
 
-import h2d.Interactive;
+import h2d.*;
 
 // import coconut.haxeui.*;
 // import coconut.ui.*;
@@ -12,42 +12,39 @@ import h2d.Interactive;
 // import haxe.ui.containers.*;
 
 class Playground extends hxd.App {
-	override function init()
+	override function init() {
+		hxd.Window.getInstance().useScreenPixels = false;
 		coconut.ui.Renderer.mount(
 			s2d,
-			coconut.Ui.hxx('<MyView />')
+			coconut.Ui.hxx('<Dummy />')
 		);
-		
+	}
 	static function main() {
 		new Playground();		
-		// trace(h2d.Interactive.fromHxx);
-		// coconut.Ui.hxx('<Interactive />');
 	}
 
 }
 
-class MyView extends coconut.ui.View {
-// 	@:state var counter:Int = 0;
-// 	@:state var click:Int = 0;
-	
+class Button extends coconut.ui.View {
+	@:child var label:String = 'Button';
+	@:attribute var width:Int = 200;
+	@:attribute function onClick(e:hxd.Event) {}
+	var font = hxd.res.DefaultFont.get();
 	function render() '
-		<h2d.Interactive width={200} height={200} />
+		<Interactive width=${width} height=${font.lineHeight + 4} onClick=${onClick} backgroundColor=${0xFFCCCCCC}>
+			<Text x=${width / 2} y=${2} font=$font text=$label textAlign=$Center textColor=${0} />
+		</Interactive>
 	';
-// 		<VBox>
-// 			<Button text="Button $counter" onClick=${click++} />
-// 			<Label text="Clicked $click times" />
-// 			<ComplexButton title="Complex Button $counter" />
-// 		</VBox>
-	
-// 	override function viewDidMount() {
-// 		new haxe.Timer(1000).run = function() {
-// 			counter += 1;
-// 		}
-// 	}
 }
 
-// class ComplexButton extends coconut.ui.View {
-// 	@:attribute var title:String;
-// 	function render() '<Button text=$title />';
-
-// }
+class Dummy extends coconut.ui.View {
+	var font = hxd.res.DefaultFont.get();
+	@:state var count:Int = 0;
+	function render() '
+		<Flow x=${200}>
+			<Button width=${20} onClick=${count--}>-</Button>
+			<Button width=${20}>${Std.string(count)}</Button>
+			<Button width=${20} onClick=${count++}>+</Button>
+		</Flow>
+	';
+}

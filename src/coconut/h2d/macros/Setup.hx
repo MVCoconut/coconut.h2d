@@ -17,7 +17,7 @@ class Setup {
     cl.meta.add(':autoBuild', [macro @:pos(cl.pos) coconut.h2d.macros.Setup.hxxAugment()], cl.pos);
   }
 
-  static function hxxAugment() {
+  static function hxxAugment():Array<Field> {
     var cl = Context.getLocalClass().get(),
         fields = Context.getBuildFields();
 
@@ -35,7 +35,7 @@ class Setup {
       macro class {
         static var COCONUT_NODE_TYPE = 
           new coconut.ui.Renderer.H2DNodeType<coconut.h2d.macros.Attributes<$self>, h2d.Object>(
-            attr -> coconut.h2d.macros.Instantiate.nativeView(attr, $i{cl.name}.new)
+            attr -> coconut.h2d.macros.Instantiate.nativeView(attr)
           );
 
         static public inline function fromHxx(
