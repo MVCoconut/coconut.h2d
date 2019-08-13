@@ -1,5 +1,7 @@
 package;
 
+import h2d.Interactive;
+
 // import coconut.haxeui.*;
 // import coconut.ui.*;
 // import Playground.*;
@@ -9,43 +11,40 @@ package;
 // import haxe.ui.components.*;
 // import haxe.ui.containers.*;
 
-class Playground {
+class Playground extends hxd.App {
+	override function init()
+		coconut.ui.Renderer.mount(
+			s2d,
+			coconut.Ui.hxx('<MyView />')
+		);
+		
 	static function main() {
-		
-		
-		// var root = new Component();
-		// Screen.instance.addComponent(root);
-		// root.width = 500;
-		// root.height = 500;
-		// coconut.ui.Renderer.mount(
-		// 	root,
-		// 	coconut.Ui.hxx('<MyView />')
-		// );
-		
-		// Toolkit.init();
+		new Playground();		
+		// trace(h2d.Interactive.fromHxx);
+		// coconut.Ui.hxx('<Interactive />');
 	}
 
-	static var EMPTY = [];
 }
 
-// class MyView extends coconut.ui.View {
+class MyView extends coconut.ui.View {
 // 	@:state var counter:Int = 0;
 // 	@:state var click:Int = 0;
 	
-// 	function render() '
+	function render() '
+		<h2d.Interactive width={200} height={200} />
+	';
 // 		<VBox>
 // 			<Button text="Button $counter" onClick=${click++} />
 // 			<Label text="Clicked $click times" />
 // 			<ComplexButton title="Complex Button $counter" />
 // 		</VBox>
-// 	';
 	
 // 	override function viewDidMount() {
 // 		new haxe.Timer(1000).run = function() {
 // 			counter += 1;
 // 		}
 // 	}
-// }
+}
 
 // class ComplexButton extends coconut.ui.View {
 // 	@:attribute var title:String;

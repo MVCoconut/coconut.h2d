@@ -3,4 +3,3 @@
 -js bin/index.js
 -cp tests
 --main Playground
-coconut.ui.Renderer

@@ -13,32 +13,49 @@ class Attributes<T> {
   #if macro
   static function build() 
     return tink.macro.BuildCache.getType('coconut.h2d.macros.Attributes', function (ctx) {
-      var fields:Array<Field> = [];
+      var fields:Array<Field> = [],
+          added = new Map();
 
+      function addField(name, pos, type:Type, ?mandatory)
+        if (!added[name]) {
+          added[name] = true;
+          fields.push({
+            name: name,
+            pos: pos,
+            kind: FProp('default', 'never', type.toComplex()),
+            meta: if (mandatory) [] else [{ name: ':optional', params: [], pos: pos }],
+          });              
+        }
       function crawl(target:ClassType) {
-        for (f in target.fields.get())
+        for (f in target.fields.get()) {
+
+          function add(?t)
+            if (t == null) add(f.type)
+            else addField(f.name, f.pos, f.type);
+
           switch f.kind {
-            case FFun(MethDynamic):
-              fields.push({
-                name: f.name,
-                pos: f.pos,
-                kind: FProp('default', 'never', f.type.toComplex()),//TODO: make this a callback
-                meta: [{ name: ':optional', params: [], pos: f.pos }],
-              });
+            case FMethod(MethDynamic):
+              add();//TODO: make this a callback
             case FVar(_, AccCall):
-              fields.push({
-                name: f.name,
-                pos: f.pos,
-                kind: FProp('default', 'never', f.type.toComplex()),
-                meta: [{ name: ':optional', params: [], pos: f.pos }],
-              });
+              add();
             default:
           }
+        }
         if (target.superClass != null)
           crawl(target.superClass.t.get());//TODO: do something about params
       }
+
+      var cl:ClassType = ctx.type.getClass();
         
-      crawl(ctx.type.getClass());
+      switch cl.constructor.get().type.reduce() {
+        case TFun(args, _):
+          for (a in args)
+            if (!a.opt) 
+              addField(a.name, cl.pos, a.t, true);
+        default: throw 'assert';
+      }
+
+      crawl(cl);
 
       return {
         name: ctx.name,

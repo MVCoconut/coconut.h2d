@@ -85,12 +85,12 @@ private class H2DBackend implements Applicator<Object> {
   public function placeholder(forTarget:Widget<Object>):VNode<Object>
     return VNode.native(PLACEHOLDER, null, null, null, null); 
 
-  static final PLACEHOLDER = new H2DNodeType(() -> new Object());
+  static final PLACEHOLDER = new H2DNodeType(_ -> new Object());
 }
 
 class H2DNodeType<Attr:{}, Real:Object> implements NodeType<Attr, Real> {
 
-  var factory:Void->Real;
+  var factory:Attr->Real;
 
   public function new(factory) 
     this.factory = factory;
@@ -98,11 +98,8 @@ class H2DNodeType<Attr:{}, Real:Object> implements NodeType<Attr, Real> {
   inline function set(target:Real, prop:String, val:Dynamic, old:Dynamic)
     Reflect.setProperty(target, prop, val);
 
-  public function create(a:Attr):Real {
-    var ret = factory();
-    Differ.updateObject(ret, a, null, set);
-    return ret;
-  }
+  public function create(a:Attr):Real 
+    return factory(a);
 
   public function update(r:Real, old:Attr, nu:Attr):Void 
     Differ.updateObject(r, nu, old, set);

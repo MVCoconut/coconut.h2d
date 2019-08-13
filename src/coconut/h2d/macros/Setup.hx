@@ -1,8 +1,8 @@
 package coconut.h2d.macros;
 
 #if macro
+import haxe.macro.*;
 import haxe.macro.Type;
-import haxe.macro.Context;
 import haxe.macro.Expr;
 
 using haxe.macro.Tools;
@@ -12,24 +12,32 @@ using haxe.io.Path;
 
 class Setup {
   static function all() {
-    var cl = Context.getType('h2d.Object').getClass();    
+
+    var cl = Context.getType('h2d.Object').getClass(); 
     cl.meta.add(':autoBuild', [macro @:pos(cl.pos) coconut.h2d.macros.Setup.hxxAugment()], cl.pos);
   }
 
   static function hxxAugment() {
-    var cl = Context.getLocalClass().get();
+    var cl = Context.getLocalClass().get(),
+        fields = Context.getBuildFields();
 
-    switch cl.constructor {
-      case null, _.get().isPublic => false: return null;
-      default:
+    switch [for (f in fields) if (f.name == 'new') f] {
+      case [v]:
+        if (v.access == null || v.access.indexOf(APublic) == -1)
+          return null;
+      default: 
+        return null;
     }
-
-    var fields = Context.getBuildFields(),
-        self = Context.getLocalType().toComplex();//TODO: type params
+    
+    var self = Context.getLocalType().toComplex();//TODO: type params
     
     return fields.concat((
       macro class {
-        static var COCONUT_NODE_TYPE = new coconut.ui.Renderer.H2DNodeType<coconut.h2d.macros.Attributes<$self>, h2d.Object>($i{cl.name}.new.bind());
+        static var COCONUT_NODE_TYPE = 
+          new coconut.ui.Renderer.H2DNodeType<coconut.h2d.macros.Attributes<$self>, h2d.Object>(
+            attr -> coconut.h2d.macros.Instantiate.nativeView(attr, $i{cl.name}.new)
+          );
+
         static public inline function fromHxx(
           hxxMeta:{ 
             @:optional var key(default, never):coconut.diffing.Key;
