@@ -12,7 +12,6 @@
   "releasenote": "initial release",
   "version": "0.0.0",
   "dependencies": {
-    "haxeui-core": "gh:heapsio/heaps",
     "coconut.diffing": "gh:MVCoconut/coconut.diffing"
   }
 }
