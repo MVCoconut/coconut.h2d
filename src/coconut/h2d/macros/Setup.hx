@@ -34,7 +34,7 @@ class Setup {
     return fields.concat((
       macro class {
         static var COCONUT_NODE_TYPE = 
-          new coconut.ui.Renderer.H2DNodeType<coconut.h2d.macros.Attributes<$self>, h2d.Object>(
+          new coconut.h2d.Renderer.H2DNodeType<coconut.h2d.macros.Attributes<$self>, h2d.Object>(
             attr -> coconut.h2d.macros.Instantiate.nativeView(attr)
           );
 
@@ -44,7 +44,7 @@ class Setup {
             @:optional var ref(default, never):coconut.ui.Ref<$self>;
           },
           attr:coconut.h2d.macros.Attributes<$self>, 
-          ?children:coconut.ui.Children):coconut.ui.RenderResult
+          ?children:coconut.h2d.Children):coconut.h2d.RenderResult
         {
           return coconut.diffing.VNode.native(COCONUT_NODE_TYPE, cast hxxMeta.ref, hxxMeta.key, attr, children);
         }

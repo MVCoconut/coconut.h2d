@@ -12,7 +12,7 @@
   "releasenote": "initial release",
   "version": "0.0.0",
   "dependencies": {
-    "heaps": "gh:heapsio/heaps",
-    "coconut.diffing": "gh:MVCoconut/coconut.diffing"
+    "heaps": "",
+    "coconut.diffing": ""
   }
 }

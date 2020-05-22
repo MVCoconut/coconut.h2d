@@ -16,7 +16,7 @@ class Playground extends hxd.App {
 		hxd.Window.getInstance().useScreenPixels = false;
 		coconut.ui.Renderer.mount(
 			s2d,
-			coconut.Ui.hxx('<Dummy />')
+			'<Dummy />'
 		);
 	}
 	static function main() {
