@@ -4,7 +4,7 @@ class View {
   static function hxx(_, e)
     return coconut.h2d.macros.HXX.parse(e);
 
-  static function init()
+  static function autoBuild()
     return
-      coconut.diffing.macros.ViewBuilder.init(macro : coconut.h2d.RenderResult);
+      coconut.diffing.macros.ViewBuilder.autoBuild(macro : coconut.h2d.RenderResult);
 }
