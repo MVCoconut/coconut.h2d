@@ -6,6 +6,8 @@ import haxe.macro.Expr;
 
 using haxe.macro.Tools;
 using tink.MacroApi;
+using Lambda;
+
 #else
 @:genericBuild(coconut.h2d.macros.Attributes.build())
 #end
@@ -29,7 +31,8 @@ class Attributes<T> {
           });              
         }
       function crawl(target:ClassType) {
-        for (f in target.fields.get()) if (f.isPublic) {
+        var fields = target.fields.get();
+        for (f in fields) if (f.isPublic) {
 
           function add(?t)
             if (t == null) add(f.type)
@@ -37,8 +40,13 @@ class Attributes<T> {
 
           switch f.kind {
             case FMethod(MethDynamic):
+              f.meta.add(':keep', [], f.pos); // keep the function
               add();//TODO: make this a callback
-            case FVar(_, AccCall | AccNormal):
+            case FVar(_, AccCall):
+              fields.find(v -> v.name == 'set_' + f.name).meta.add(':keep', [], f.pos); // keep the setter
+              add();
+            case FVar(_, AccNormal):
+              f.meta.add(':keep', [], f.pos); // keep the variable
               add();
             default:
           }
